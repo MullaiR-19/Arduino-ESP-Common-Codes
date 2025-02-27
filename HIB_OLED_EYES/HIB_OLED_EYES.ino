@@ -14,12 +14,17 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 #define touchIn 2
 #define TIMER_DURATION 10000  // Set timer to 10 seconds (10000 ms)
 
+
 unsigned long startTime = 0;
 bool timerRunning = false;
+
+unsigned long previousMillis = 0;
+int countBlink = 0;
 
 long micVal = 0;
 int touchVal = 0;
 int touchCount = 0;
+int searchCount = 6;
 
 long sum = 0 ; // Store the total value of n measurements
 long level = 0 ; // Store the average value
@@ -55,6 +60,7 @@ void sleep();
 void wakeup();
 void happy_eye();
 void tinkle_eye();
+void pat_eye();
 void saccade(int direction_x, int direction_y);
 void move_right_big_eye();
 void move_left_big_eye();
@@ -76,6 +82,7 @@ void draw_eyes(bool update = true) {
     display.display();
   }
 }
+
 
 void center_eyes(bool update = true) {
   //move eyes to the center of the display, defined by SCREEN_WIDTH, SCREEN_HEIGHT
@@ -161,7 +168,7 @@ void tinkle_eye() {
     display.fillRect(right_eye_x - right_eye_width / 2 - 1, right_eye_y + 5, right_eye_width + 1, 20, SSD1306_BLACK);
     offset -= 2;
     display.display();
-    delay(1);
+//    delay(1);
   }
 
 
@@ -289,6 +296,11 @@ void move_big_eye(int direction) {  // MOVES TO RIGHT OR LEFT DEPENDING ON 1 OR 
   center_eyes();
 }
 
+void pat_eye() {
+  left_eye_height = 2;
+//  right_eye_height = 2;
+  draw_eyes(true);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -312,6 +324,9 @@ void setup() {
   display.println(F("  "));
   display.println(F("MullaiDIYprojects"));
   display.println(F("  "));
+  display.setCursor(40, 40);
+  display.setTextSize(2);
+  display.println(F("HIB"));
   display.display();
   delay(3000);
   display.clearDisplay();
@@ -331,29 +346,8 @@ void setup() {
   blink(10);
 }
 
-void loop() {
-
-
-  touchVal = digitalRead(touchIn);
-  Serial.print("Mic Value: ");
-  Serial.println(micVal);
-  Serial.print("Touch Value: ");
-  Serial.println(touchVal);
-  Serial.println("");
-  delay(100);
-
-  for ( int i = 0 ; i < num_Measure; i ++)
-  {
-    micVal = analogRead(micIn);
-    sum = sum + micVal;
-  }
-
-  level = sum / num_Measure; // Calculate the average value
-  Serial.print("Sound Level: ");
-  Serial.println (level - 33);
-
-  if (micVal > 1000) {
-    Serial.println("All Motion!");
+void allMotion(){
+   Serial.println("All Motion!");
     // BOTTOM LEFT
     dir_x = -1;
     dir_y = 1;
@@ -417,11 +411,27 @@ void loop() {
     delay(300);
     saccade(-dir_x, -dir_y);
     delay(300);
+}
+
+void loop() {
+
+  micVal  = analogRead(micIn);
+  touchVal = digitalRead(touchIn);
+  //  Serial.print("Mic Value: ");
+  //  Serial.println(micVal);
+  //  Serial.print("Touch Value: ");
+  //  Serial.println(touchVal);
+  //  Serial.println("");
+  delay(100);
+
+  if (micVal > 1000) {
+   allMotion();
   }
 
   if (touchVal == 1) {
     touchCount += 1;
-    if (touchCount == 5) {
+    
+    if (touchCount == 7) {
       happy_eye();
       Serial.println("Happy Eye!");
       delay(1000);
@@ -433,23 +443,22 @@ void loop() {
 
   }
 
+  int BLINK_DURATION = random(2500, 3500); // Set timer to 2-3 seconds
+  unsigned long currentMillis = millis();
 
-
-  if (timerRunning) {
-    unsigned long elapsedTime = millis() - startTime;
-    unsigned long remainingTime = (TIMER_DURATION - elapsedTime) / 1000;
-
-    Serial.print("Time Left: ");
-    Serial.println(remainingTime);
-
-    if (elapsedTime >= TIMER_DURATION) {
-      Serial.println("Timer Finished!");
-      sleep();
-      timerRunning = false;  // Stop timer
+  if (currentMillis - previousMillis >= BLINK_DURATION) {
+    previousMillis = currentMillis; // Update time
+    blink(10);
+    countBlink+=1;
+    if(countBlink == searchCount){
+      searchCount = random(5,11);
+      move_right_big_eye();
+      delay(50);
+      move_left_big_eye();
+      delay(50);
+      countBlink=0;
     }
   }
 
   sum = 0 ; // Reset the sum of the measurement values
-
-
 }

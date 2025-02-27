@@ -1,3 +1,31 @@
+/*
+ * Copyright (C) 2025 Mullaivendhan K (MullaiDIYprojects)
+ *
+ * This software is provided as a free resource for personal and educational use. 
+ * Users are allowed to modify, distribute, and utilize the code in their personal projects 
+ * or for learning purposes without restrictions. 
+ *
+ * However, commercial usage of this code, whether in its original form or in a modified version, 
+ * requires explicit permission from the author. This includes but is not limited to 
+ * incorporating the code into a product or service intended for sale, monetization through 
+ * software solutions, or using it in a business-related context. 
+ *
+ * The author holds no responsibility for any potential damages, losses, or malfunctions 
+ * that may arise from the use or modification of this code. Users are encouraged to test and 
+ * validate the code thoroughly before deploying it in any critical applications.
+ *
+ * Attribution is appreciated but not mandatory when using this code for personal or 
+ * educational purposes. However, if you redistribute the code in any form, providing proper 
+ * credit to the original author is recommended.
+ *
+ * For inquiries regarding commercial licensing or collaboration, please contact 
+ * the author through official communication channels.
+ *
+ * e-Mail: mullai.v211@gmail.com
+ * Git: MullaiR-19
+ * YouTube: https://www.youtube.com/mullaiDIYprojects
+ */
+
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>

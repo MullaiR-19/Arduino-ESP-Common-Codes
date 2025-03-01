@@ -29,14 +29,14 @@ void loop() {
     Serial.print("   LPG Detected   ");
     digitalWrite(RED_LED, HIGH);
     digitalWrite(GREEN_LED, LOW);
-    controllerServo.wirte(65);
+    controllerServo.write(65);
   }
 
   else {
     Serial.print("   LPG Not Detected   ");
     digitalWrite(RED_LED, LOW);
     digitalWrite(GREEN_LED, HIGH);
-    controllerServo.wirte(10);
+    controllerServo.write(10);
   }
 
   delay(10);
